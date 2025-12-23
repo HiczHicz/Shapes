@@ -1,3 +1,5 @@
+package pl.edu.ug.hiczhicz;
+
 public class Point implements Cloneable {
     final public static double PRECISION=0.001;
 
@@ -27,7 +29,7 @@ public class Point implements Cloneable {
         return new Point(x+p.x, y+p.y);
     }
 
-    public Point substract(Point p){
+    public Point subtract(Point p){
         return new Point(x-p.x, y-p.y);
     }
 
