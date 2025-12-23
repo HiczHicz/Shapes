@@ -2,6 +2,7 @@ package pl.edu.ug.hiczhicz;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 
 public class Ellipse extends Shape{
     protected double ax1, ax2;
@@ -21,7 +22,7 @@ public class Ellipse extends Shape{
 
     @Override
     protected double computeArea(){
-        return Math.PI*ax2*ax2;
+        return Math.PI*ax1*ax2;
     }
     @Override
     protected double computePerimeter(){
@@ -31,15 +32,26 @@ public class Ellipse extends Shape{
 
     @Override
     public Point getCorner(){
-        //DOKONCZYC
+        Point pm=new Point(ax1/2,ax2/2);
+        return center.subtract(pm);
     }
     @Override
-    public void getExtraData(JFrame frame){
-        /// ////////
+    protected void getExtraData(JFrame frame){
+        String axes= JOptionPane.showInputDialog(frame,
+                "Enter axes lengths ax1:ax2",
+                "105:55");
+        String[] axesArray=axes.split(":");
+        ax1=Double.parseDouble(axesArray[0]);
+        ax2=Double.parseDouble(axesArray[1]);
     }
     @Override
     public void draw(Graphics2D g2d){
-        /// ////////
+        g2d.setColor(color);
+        Point corner=getCorner();
+        Ellipse2D.Double ellipse=
+                new Ellipse2D.Double(corner.x,corner.y,ax1,ax2);
+        g2d.draw(ellipse);
+        g2d.fill(ellipse);
     }
     @Override
     public String toString(){
@@ -48,6 +60,6 @@ public class Ellipse extends Shape{
     }
 
     public Circle getInscribedCircle(Color color){
-        /// ////////
+        return new Circle(color, center, ax1/2);
     }
 }
