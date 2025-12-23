@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+
 abstract public class Shape {
     protected String name;
     //..color in draw()
