@@ -9,6 +9,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
 
+import static pl.edu.ug.hiczhicz.Shape.printColor;
+
 
 public class MainWindow extends JFrame {
     private JPanel mainPanel;
@@ -74,8 +76,43 @@ public class MainWindow extends JFrame {
 
     }
 
-    private void actionChooseColor(){
+    private void actionChooseColor() {
+        //..generowanie losowego koloru na start
+        Random rand = new Random();
+        String defaultRgb = rand.nextInt(256) + ":" + rand.nextInt(256) + ":" + rand.nextInt(256);
 
+        //..okno z zawartością
+        Object resultObj = JOptionPane.showInputDialog(
+                this,
+                "Please input color components: r:g:b\nor leave empty for random color",
+                "Input",
+                JOptionPane.QUESTION_MESSAGE,
+                null,                                  //..ikona (null = domyślna dla typu)
+                null,                                       //..opcje wyboru (null = pole tekstowe)
+                defaultRgb                                  //..domyślna wartość w polu
+        );
+
+        //..sprawdzenie, czy użytkownik kliknął OK (resultObj nie jest null)
+        if (resultObj != null) {
+            String result = resultObj.toString();
+
+            if (result.trim().isEmpty()) {
+                //..jeśli użytkownik wykasował tekst i dał OK -> losowanie nowego koloru
+                this.color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+            } else {
+                //..odczytanie rgb
+                try {
+                    String[] parts = result.split(":");
+                    int r = Integer.parseInt(parts[0].trim());
+                    int g = Integer.parseInt(parts[1].trim());
+                    int b = Integer.parseInt(parts[2].trim());
+                    this.color = new Color(r, g, b);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Wrong format! Use r:g:b", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            updateLabels();
+        }
     }
 
     private void actionPointClicked(MouseEvent e){
@@ -91,7 +128,11 @@ public class MainWindow extends JFrame {
     }
 
     private void updateLabels() {
-
+        if (color != null) {
+            colorLabel.setText("Color: " + printColor(color));
+        } else {
+            colorLabel.setText("Color: ---");
+        }
 
     }
 
