@@ -116,7 +116,8 @@ public class MainWindow extends JFrame {
     }
 
     private void actionPointClicked(MouseEvent e){
-
+        this.point = new Point(e.getX(), e.getY());
+        updateLabels();
     }
 
     private void actionClose() {
@@ -134,6 +135,11 @@ public class MainWindow extends JFrame {
             colorLabel.setText("Color: ---");
         }
 
+        if (point != null){
+            pointLabel.setText("Center: " + point.toString());
+        } else {
+            pointLabel.setText("Center: ---");
+        }
     }
 
 //    private void drawInitialShapes(){
