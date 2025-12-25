@@ -237,6 +237,26 @@ public class MainWindow extends JFrame {
     }
 
     private void actionShowShapes() {
+        if (canvas.shapes.isEmpty()){
+            JOptionPane.showMessageDialog(
+                    this,
+                    "No shapes drawn",
+                    "Info",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }else{
+            StringBuilder sb = new StringBuilder();
+            for (Shape s : canvas.shapes) {
+                sb.append(s.toString()); //opis kształu
+                sb.append("\n");         //nowa linia
+            }
+            JOptionPane.showMessageDialog(
+                    this,
+                    sb.toString(),
+                    "List of shapes",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        }
 
     }
 
