@@ -2,7 +2,10 @@ package pl.edu.ug.hiczhicz;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
@@ -22,6 +25,9 @@ public class MainWindow extends JFrame {
     private JButton buttonClose;
     private JLabel pointLabel;
     private JLabel colorLabel;
+    private JButton buttonSave;
+    private JButton buttonLoad;
+    private JButton buttonExport;
 
     private DrawingCanvas canvas = new DrawingCanvas();
     private Color color = null;
@@ -41,12 +47,13 @@ public class MainWindow extends JFrame {
         buttonShapes.setText("List of shapes");
         buttonCredits.setText("Credits");
         buttonClose.setText("Close");
+        buttonSave.setText("Save");
+        buttonExport.setText("Export");
+        buttonLoad.setText("Load");
         updateLabels();
         drawInitialShapes();
 
-        // All these event listeners should be added by IntelliJ semi-automatically
-        // however in each listener we add our custom method 'action...'
-        // responsible for this event
+        //---------------------------------------------ACTION BUTTONS----------------------------------------------
         buttonClose.addActionListener(actionEvent -> actionClose());
         buttonCredits.addActionListener(actionEvent -> actionCredits());
         canvasPanel.addMouseListener(new MouseAdapter() {
@@ -61,19 +68,21 @@ public class MainWindow extends JFrame {
         buttonClear.addActionListener(actionEvent -> actionClear());
         buttonShapes.addActionListener(actionEvent -> actionShowShapes());
 
+        buttonSave.addActionListener(actionEvent -> actionSave());
+        buttonLoad.addActionListener(actionEvent -> actionLoad());
+        buttonExport.addActionListener(actionEvent -> actionExport());
     }
 
-
+    //---------------------------------------------ADD----------------------------------------------
     private void actionAdd(){
         if (color==null || point==null){
             JOptionPane.showMessageDialog(this, "Please select the point and the color", "Error", JOptionPane.ERROR_MESSAGE);
         }else{
             String[] shapes =
-                    {
-                            "Rectangle",
-                            "Square",
-                            "Ellipse",
-                            "Circle"
+                    {"Rectangle",
+                        "Square",
+                        "Ellipse",
+                        "Circle"
                     };
             //..tworzymy JComboBox, który obsłuży stringi - lista rozwijana
             JComboBox<String> shapeList = new JComboBox<>(shapes);
@@ -230,12 +239,12 @@ public class MainWindow extends JFrame {
         }
 
     }
-
+    //---------------------------------------------CLEAR----------------------------------------------
     private void actionClear(){
         canvas.shapes.clear();
         canvas.rePaint();
     }
-
+    //---------------------------------------------SHOW SHAPES----------------------------------------------
     private void actionShowShapes() {
         if (canvas.shapes.isEmpty()){
             JOptionPane.showMessageDialog(
@@ -247,8 +256,8 @@ public class MainWindow extends JFrame {
         }else{
             StringBuilder sb = new StringBuilder();
             for (Shape s : canvas.shapes) {
-                sb.append(s.toString()); //opis kształu
-                sb.append("\n");         //nowa linia
+                sb.append(s.toString()); //..opis kształu
+                sb.append("\n");         //..nowa linia
             }
             JOptionPane.showMessageDialog(
                     this,
@@ -259,7 +268,7 @@ public class MainWindow extends JFrame {
         }
 
     }
-
+    //---------------------------------------------COLORS----------------------------------------------
     private void actionChooseColor() {
         //..generowanie losowego koloru na start
         Random rand = new Random();
@@ -298,20 +307,23 @@ public class MainWindow extends JFrame {
             updateLabels();
         }
     }
-
+    //---------------------------------------------CENTER----------------------------------------------
     private void actionPointClicked(MouseEvent e){
         this.point = new Point(e.getX(), e.getY());
         updateLabels();
     }
 
+    //---------------------------------------------CLOSE----------------------------------------------
     private void actionClose() {
         this.dispose();
     }
 
+    //---------------------------------------------CREDITS----------------------------------------------
     private void actionCredits(){
         JOptionPane.showMessageDialog(this, "Developed by Martyna Pieczka", "Credits", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    //---------------------------------------------LABELS----------------------------------------------
     private void updateLabels() {
         if (color != null) {
             colorLabel.setText("Color: " + printColor(color));
@@ -326,6 +338,90 @@ public class MainWindow extends JFrame {
         }
     }
 
+    //---------------------------------------------SAVE----------------------------------------------
+    private void actionSave() {
+        //..nie zapisujemy pustych plików
+        if (canvas.shapes.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nothing to save!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        //..filtrowanie, żeby widziało pliki tylko z .dat
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "DAT files", "dat");
+        fileChooser.setFileFilter(filter);
+
+        //..tytuł okienka
+        fileChooser.setDialogTitle("Save shapes");
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            try {
+                FileManager.saveShapes(canvas.shapes, filePath);
+                JOptionPane.showMessageDialog(this, "Saved successfully!");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error saving file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+                //..wyrzuca błąd do konsoli, a nie użytkownikowi, dlatego się czepia - zmienić w przyszłości
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //---------------------------------------------LOAD----------------------------------------------
+    private void actionLoad() {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                ".dat files", "dat");
+        fileChooser.setFileFilter(filter);
+        fileChooser.setDialogTitle("Load shapes");
+
+        int userSelection = fileChooser.showOpenDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            try {
+                //..wczytanie listy z pliku
+                canvas.shapes = FileManager.loadShapes(filePath);
+                canvas.rePaint();
+                JOptionPane.showMessageDialog(this, "Loaded successfully!");
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error loading file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //---------------------------------------------EXPORT----------------------------------------------
+    private void actionExport() {
+        if (canvas.shapes.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nothing to export!", "Warning", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Export to SVG");
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            try {
+                // Przekazujemy rozmiar canvasu, żeby ustawić nagłówek SVG
+                FileManager.exportToSVG(canvas.shapes, filePath, canvasPanel.getWidth(), canvasPanel.getHeight());
+                JOptionPane.showMessageDialog(this, "Exported to SVG successfully!");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Error exporting: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //---------------------------------------------INITIAL SHAPES----------------------------------------------
     private void drawInitialShapes(){
         Color color1=new Color(0x84,0xb4,0xc8,0xd0);
         Color color2=new Color(0x8e,0xc9,0xbb,0xd0);

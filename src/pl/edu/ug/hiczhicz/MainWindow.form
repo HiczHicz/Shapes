@@ -89,6 +89,31 @@
           </component>
         </children>
       </grid>
+      <grid id="1184" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints border-constraint="North"/>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="ba3b1" class="javax.swing.JButton" binding="buttonSave">
+            <constraints/>
+            <properties>
+              <text value="Button"/>
+            </properties>
+          </component>
+          <component id="247ba" class="javax.swing.JButton" binding="buttonLoad">
+            <constraints/>
+            <properties>
+              <text value="Button"/>
+            </properties>
+          </component>
+          <component id="6d97a" class="javax.swing.JButton" binding="buttonExport">
+            <constraints/>
+            <properties>
+              <text value="Button"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
     </children>
   </grid>
 </form>

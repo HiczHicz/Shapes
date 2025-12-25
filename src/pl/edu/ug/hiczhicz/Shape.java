@@ -2,9 +2,10 @@ package pl.edu.ug.hiczhicz;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 
 
-abstract public class Shape {
+abstract public class Shape implements Serializable {
     protected String name;
     //..color in draw()
     protected Color color;
