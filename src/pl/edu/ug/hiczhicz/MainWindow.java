@@ -42,7 +42,7 @@ public class MainWindow extends JFrame {
         buttonCredits.setText("Credits");
         buttonClose.setText("Close");
         updateLabels();
-        //drawInitialShapes();
+        drawInitialShapes();
 
         // All these event listeners should be added by IntelliJ semi-automatically
         // however in each listener we add our custom method 'action...'
@@ -98,11 +98,67 @@ public class MainWindow extends JFrame {
 
                 switch (choice) {
                     case "Rectangle":
+                        String sidesInput = (String) JOptionPane.showInputDialog(
+                                this,
+                                "Enter sides lengths a:b",
+                                "Input",
+                                JOptionPane.QUESTION_MESSAGE, //..question icon
+                                null,
+                                null,
+                                "105:55"
+                        );
+                        if (sidesInput != null) {
+                            try {
+                                String[] sides = sidesInput.split(":");
+                                double a = Double.parseDouble(sides[0]);
+                                double b = Double.parseDouble(sides[1]);
 
+                                //..czy boki są dodatnie?
+                                if (a <= 0 || b <=0) {
+                                    JOptionPane.showMessageDialog(this, "Sides lengths must be > 0", "Error", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    //..tworzymy nowy prostokąt
+                                    Rectangle r = new Rectangle(this.color, this.point, a, b);
+
+                                    //..dodajemy prostokąt na ekran
+                                    canvas.shapes.add(r);
+                                    canvas.rePaint();
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(this, "Invalid number format!", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                         break;
 
                     case "Square":
+                        String sideInput = (String) JOptionPane.showInputDialog(
+                                this,
+                                "Enter side length a",
+                                "Input",
+                                JOptionPane.QUESTION_MESSAGE, //..question icon
+                                null,
+                                null,
+                                "80"
+                        );
+                        if (sideInput != null) {
+                            try {
+                                double a = Double.parseDouble(sideInput);
 
+                                //..czy boki są dodatnie?
+                                if (a <= 0) {
+                                    JOptionPane.showMessageDialog(this, "Side length must be > 0", "Error", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    //..tworzymy nowy kwadrat
+                                    Square s = new Square(this.color, this.point, a);
+
+                                    //..dodajemy prostokąt na ekran
+                                    canvas.shapes.add(s);
+                                    canvas.rePaint();
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(this, "Invalid number format!", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                         break;
 
                     case "Ellipse":
@@ -110,7 +166,7 @@ public class MainWindow extends JFrame {
                                 this,
                                 "Enter axes ax1:ax2",
                                 "Input",
-                                JOptionPane.QUESTION_MESSAGE, // Użyj QUESTION, żeby był pytajnik
+                                JOptionPane.QUESTION_MESSAGE, //..question icon
                                 null,
                                 null,
                                 "95:55"
@@ -121,7 +177,7 @@ public class MainWindow extends JFrame {
                                 double ax1 = Double.parseDouble(axes[0]);
                                 double ax2 = Double.parseDouble(axes[1]);
 
-                                //..czy promień jest dodatni?
+                                //..czy osie są dodatnie?
                                 if (ax1 <= 0 || ax2 <=0) {
                                     JOptionPane.showMessageDialog(this, "Axes must be > 0", "Error", JOptionPane.ERROR_MESSAGE);
                                 } else {
@@ -143,7 +199,7 @@ public class MainWindow extends JFrame {
                                 this,
                                 "Enter radius:",
                                 "Input",
-                                JOptionPane.QUESTION_MESSAGE, // Użyj QUESTION, żeby był pytajnik
+                                JOptionPane.QUESTION_MESSAGE, //..question icon
                                 null,
                                 null,
                                 "80"
@@ -176,7 +232,8 @@ public class MainWindow extends JFrame {
     }
 
     private void actionClear(){
-
+        canvas.shapes.clear();
+        canvas.rePaint();
     }
 
     private void actionShowShapes() {
@@ -249,24 +306,24 @@ public class MainWindow extends JFrame {
         }
     }
 
-//    private void drawInitialShapes(){
-//        Color color1=new Color(0x84,0xb4,0xc8,0xd0);
-//        Color color2=new Color(0x8e,0xc9,0xbb,0xd0);
-//        Color color3=new Color(0xf4,0xdc,0xd6,0xd0);
-//        Circle c=new Circle(color1,new Point(200,200),70);
-//        canvas.shapes.add(c.getCircumscribedSquare(color3));
-//        canvas.shapes.add(c);
-//        Rectangle r=new Rectangle(color1,new Point(520,350),130,90);
-//        canvas.shapes.add(r.getCircumscribedCircle(color3));
-//        canvas.shapes.add(r);
-//        Ellipse e=new Ellipse(color2,new Point(410,250),90,150);
-//        canvas.shapes.add(e);
-//        canvas.shapes.add(e.getInscribedCircle(color3));
-//        Square s=new Square(color1,new Point(600,80),90);
-//        canvas.shapes.add(s);
-//        canvas.shapes.add(s.getInscribedCircle(color3));
-//        canvas.rePaint();
-//    }
+    private void drawInitialShapes(){
+        Color color1=new Color(0x84,0xb4,0xc8,0xd0);
+        Color color2=new Color(0x8e,0xc9,0xbb,0xd0);
+        Color color3=new Color(0xf4,0xdc,0xd6,0xd0);
+        Circle c=new Circle(color1,new Point(200,200),70);
+        canvas.shapes.add(c.getCircumscribedSquare(color3));
+        canvas.shapes.add(c);
+        Rectangle r=new Rectangle(color1,new Point(520,350),130,90);
+        canvas.shapes.add(r.getCircumscribedCircle(color3));
+        canvas.shapes.add(r);
+        Ellipse e=new Ellipse(color2,new Point(410,250),90,150);
+        canvas.shapes.add(e);
+        canvas.shapes.add(e.getInscribedCircle(color3));
+        Square s=new Square(color1,new Point(600,80),90);
+        canvas.shapes.add(s);
+        canvas.shapes.add(s.getInscribedCircle(color3));
+        canvas.rePaint();
+    }
 
 }
 
