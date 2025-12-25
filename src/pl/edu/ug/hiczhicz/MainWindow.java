@@ -3,8 +3,6 @@ package pl.edu.ug.hiczhicz;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Random;
@@ -17,22 +15,22 @@ public class MainWindow extends JFrame {
     private JPanel canvasPanel;
     private JPanel controlPanel;
     private JButton buttonColor;
-    private JButton buttonShapes;
     private JButton buttonAdd;
     private JButton buttonClear;
+    private JButton buttonShapes;
     private JButton buttonCredits;
     private JButton buttonClose;
     private JLabel pointLabel;
     private JLabel colorLabel;
 
-    //private DrawingCanvas canvas = new DrawingCanvas();
+    private DrawingCanvas canvas = new DrawingCanvas();
     private Color color = null;
     private Point point = null;
 
     public MainWindow() {
         super();
         this.setContentPane(mainPanel);
-        //canvasPanel.add(canvas);
+        canvasPanel.add(canvas);
         Border greyLine = BorderFactory.createLineBorder(Color.DARK_GRAY);
         canvasPanel.setBorder(greyLine);
         canvasPanel.setBackground(new Color(250, 250, 240));
@@ -59,20 +57,129 @@ public class MainWindow extends JFrame {
             }
         });
         buttonColor.addActionListener(actionEvent -> actionChooseColor());
-        buttonClear.addActionListener(actionEvent -> actionClear());
         buttonAdd.addActionListener(actionEvent -> actionAdd());
+        buttonClear.addActionListener(actionEvent -> actionClear());
         buttonShapes.addActionListener(actionEvent -> actionShowShapes());
-    }
-
-    private void actionShowShapes() {
 
     }
+
 
     private void actionAdd(){
+        if (color==null || point==null){
+            JOptionPane.showMessageDialog(this, "Please select the point and the color", "Error", JOptionPane.ERROR_MESSAGE);
+        }else{
+            String[] shapes =
+                    {
+                            "Rectangle",
+                            "Square",
+                            "Ellipse",
+                            "Circle"
+                    };
+            //..tworzymy JComboBox, który obsłuży stringi - lista rozwijana
+            JComboBox<String> shapeList = new JComboBox<>(shapes);
+
+            //..definicja własnych przycisków
+            Object[] options = {"Draw", "Cancel"};
+
+            int result = JOptionPane.showOptionDialog(
+                    this,
+                    shapeList,
+                    "Please select shape",
+                    JOptionPane.OK_CANCEL_OPTION, //..okno typu zatwierdź/odrzuć
+                    JOptionPane.PLAIN_MESSAGE,    //brak ikonu
+                    null,                    //..brak ikony
+                    options,                 //..przyciski draw/cancel
+                    options[0]               //..ustawienie domyślnego przycisku
+            );
+
+            if (result == 0) {
+                //..pobranie tekstu z JCombobox
+                String choice = (String) shapeList.getSelectedItem();
+
+                switch (choice) {
+                    case "Rectangle":
+
+                        break;
+
+                    case "Square":
+
+                        break;
+
+                    case "Ellipse":
+                        String axesInput = (String) JOptionPane.showInputDialog(
+                                this,
+                                "Enter axes ax1:ax2",
+                                "Input",
+                                JOptionPane.QUESTION_MESSAGE, // Użyj QUESTION, żeby był pytajnik
+                                null,
+                                null,
+                                "95:55"
+                        );
+                        if (axesInput != null) {
+                            try {
+                                String[] axes = axesInput.split(":");
+                                double ax1 = Double.parseDouble(axes[0]);
+                                double ax2 = Double.parseDouble(axes[1]);
+
+                                //..czy promień jest dodatni?
+                                if (ax1 <= 0 || ax2 <=0) {
+                                    JOptionPane.showMessageDialog(this, "Axes must be > 0", "Error", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    //..tworzymy nowy Ellipse
+                                    Ellipse e = new Ellipse(this.color, this.point, ax1, ax2);
+
+                                    //..dodajemy Ellipse na ekran
+                                    canvas.shapes.add(e);
+                                    canvas.rePaint();
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(this, "Invalid number format!", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                        break;
+
+                    case "Circle":
+                        String radiusInput = (String) JOptionPane.showInputDialog(
+                                this,
+                                "Enter radius:",
+                                "Input",
+                                JOptionPane.QUESTION_MESSAGE, // Użyj QUESTION, żeby był pytajnik
+                                null,
+                                null,
+                                "80"
+                        );
+                        if (radiusInput != null) {
+                            try {
+                                double radius = Double.parseDouble(radiusInput);
+
+                                //..czy promień jest dodatni?
+                                if (radius <= 0) {
+                                    JOptionPane.showMessageDialog(this, "Radius must be > 0", "Error", JOptionPane.ERROR_MESSAGE);
+                                } else {
+                                    //..tworzymy nowy Circle
+                                    Circle c = new Circle(this.color, this.point, radius);
+
+                                    //..dodajemy Circle na ekran
+                                    canvas.shapes.add(c);
+                                    canvas.rePaint();
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(this, "Invalid number format!", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                        break;
+                }
+            }
+
+        }
 
     }
 
     private void actionClear(){
+
+    }
+
+    private void actionShowShapes() {
 
     }
 

@@ -14,7 +14,7 @@ abstract public class Shape {
     private Double perimeter = null;
 
     //..the center of a figure
-    pl.edu.ug.hiczhicz.Point center;
+    Point center;
 
     //..true for unitialized object
     protected boolean isEmpty=false;
@@ -24,7 +24,7 @@ abstract public class Shape {
         isEmpty=true;
     }
 
-    public Shape(Color color, pl.edu.ug.hiczhicz.Point center){
+    public Shape(Color color, Point center){
         this.color=color;
         this.center=center;
     }
@@ -43,7 +43,7 @@ abstract public class Shape {
         return perimeter;
     }
 
-    public void initialize(JFrame frame, Color color, pl.edu.ug.hiczhicz.Point center){
+    public void initialize(JFrame frame, Color color, Point center){
         this.color=color;
         this.center=center;
         getExtraData(frame);

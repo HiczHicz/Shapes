@@ -1,4 +1,4 @@
-import pl.edu.ug.hiczhicz.Shape;
+package pl.edu.ug.hiczhicz;
 
 import javax.swing.*;
 import java.awt.*;
