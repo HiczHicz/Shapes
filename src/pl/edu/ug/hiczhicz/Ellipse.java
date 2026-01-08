@@ -32,7 +32,7 @@ public class Ellipse extends Shape{
 
     @Override
     public Point getCorner(){
-        Point pm=new Point(ax1/2,ax2/2);
+        Point pm=new Point(ax1,ax2);
         return center.subtract(pm);
     }
     @Override
@@ -49,7 +49,7 @@ public class Ellipse extends Shape{
         g2d.setColor(color);
         Point corner=getCorner();
         Ellipse2D.Double ellipse=
-                new Ellipse2D.Double(corner.x,corner.y,ax1,ax2);
+                new Ellipse2D.Double(corner.x,corner.y,2*ax1,2*ax2);
         g2d.draw(ellipse);
         g2d.fill(ellipse);
     }
@@ -60,6 +60,7 @@ public class Ellipse extends Shape{
     }
 
     public Circle getInscribedCircle(Color color){
-        return new Circle(color, center, ax1/2);
+        double radius = Math.min(ax1, ax2);
+        return new Circle(color, center, radius);
     }
 }
