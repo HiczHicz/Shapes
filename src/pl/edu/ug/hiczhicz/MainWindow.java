@@ -243,9 +243,6 @@ public class MainWindow extends JFrame {
                 JOptionPane.showMessageDialog(this, "Saved successfully!");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Error saving file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-
-                //..wyrzuca błąd do konsoli, a nie użytkownikowi, dlatego się czepia - zmienić w przyszłości
-                e.printStackTrace();
             }
         }
     }
@@ -270,7 +267,6 @@ public class MainWindow extends JFrame {
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Error loading file: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
             }
         }
     }
