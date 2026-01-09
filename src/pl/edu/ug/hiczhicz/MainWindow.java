@@ -74,170 +74,50 @@ public class MainWindow extends JFrame {
     }
 
     //---------------------------------------------ADD----------------------------------------------
-    private void actionAdd(){
-        if (color==null || point==null){
-            JOptionPane.showMessageDialog(this, "Please select the point and the color", "Error", JOptionPane.ERROR_MESSAGE);
-        }else{
-            String[] shapes =
-                    {"Rectangle",
-                        "Square",
-                        "Ellipse",
-                        "Circle"
-                    };
-            //..tworzymy JComboBox, który obsłuży stringi - lista rozwijana
-            JComboBox<String> shapeList = new JComboBox<>(shapes);
-
-            //..definicja własnych przycisków
-            Object[] options = {"Draw", "Cancel"};
-
-            int result = JOptionPane.showOptionDialog(
-                    this,
-                    shapeList,
-                    "Please select shape",
-                    JOptionPane.OK_CANCEL_OPTION, //..okno typu zatwierdź/odrzuć
-                    JOptionPane.PLAIN_MESSAGE,    //brak ikonu
-                    null,                    //..brak ikony
-                    options,                 //..przyciski draw/cancel
-                    options[0]               //..ustawienie domyślnego przycisku
-            );
-
-            if (result == 0) {
-                //..pobranie tekstu z JCombobox
-                String choice = (String) shapeList.getSelectedItem();
-
-                switch (choice) {
-                    case "Rectangle":
-                        String sidesInput = (String) JOptionPane.showInputDialog(
-                                this,
-                                "Enter sides lengths a:b",
-                                "Input",
-                                JOptionPane.QUESTION_MESSAGE, //..question icon
-                                null,
-                                null,
-                                "105:55"
-                        );
-                        if (sidesInput != null) {
-                            try {
-                                String[] sides = sidesInput.split(":");
-                                double a = Double.parseDouble(sides[0]);
-                                double b = Double.parseDouble(sides[1]);
-
-                                //..czy boki są dodatnie?
-                                if (a <= 0 || b <=0) {
-                                    JOptionPane.showMessageDialog(this, "Sides lengths must be > 0", "Error", JOptionPane.ERROR_MESSAGE);
-                                } else {
-                                    //..tworzymy nowy prostokąt
-                                    Rectangle r = new Rectangle(this.color, this.point, a, b);
-
-                                    //..dodajemy prostokąt na ekran
-                                    canvas.shapes.add(r);
-                                    canvas.rePaint();
-                                }
-                            } catch (NumberFormatException ex) {
-                                JOptionPane.showMessageDialog(this, "Invalid number format!", "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                        break;
-
-                    case "Square":
-                        String sideInput = (String) JOptionPane.showInputDialog(
-                                this,
-                                "Enter side length a",
-                                "Input",
-                                JOptionPane.QUESTION_MESSAGE, //..question icon
-                                null,
-                                null,
-                                "80"
-                        );
-                        if (sideInput != null) {
-                            try {
-                                double a = Double.parseDouble(sideInput);
-
-                                //..czy boki są dodatnie?
-                                if (a <= 0) {
-                                    JOptionPane.showMessageDialog(this, "Side length must be > 0", "Error", JOptionPane.ERROR_MESSAGE);
-                                } else {
-                                    //..tworzymy nowy kwadrat
-                                    Square s = new Square(this.color, this.point, a);
-
-                                    //..dodajemy prostokąt na ekran
-                                    canvas.shapes.add(s);
-                                    canvas.rePaint();
-                                }
-                            } catch (NumberFormatException ex) {
-                                JOptionPane.showMessageDialog(this, "Invalid number format!", "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                        break;
-
-                    case "Ellipse":
-                        String axesInput = (String) JOptionPane.showInputDialog(
-                                this,
-                                "Enter axes ax1:ax2",
-                                "Input",
-                                JOptionPane.QUESTION_MESSAGE, //..question icon
-                                null,
-                                null,
-                                "95:55"
-                        );
-                        if (axesInput != null) {
-                            try {
-                                String[] axes = axesInput.split(":");
-                                double ax1 = Double.parseDouble(axes[0]);
-                                double ax2 = Double.parseDouble(axes[1]);
-
-                                //..czy osie są dodatnie?
-                                if (ax1 <= 0 || ax2 <=0) {
-                                    JOptionPane.showMessageDialog(this, "Axes must be > 0", "Error", JOptionPane.ERROR_MESSAGE);
-                                } else {
-                                    //..tworzymy nowy Ellipse
-                                    Ellipse e = new Ellipse(this.color, this.point, ax1, ax2);
-
-                                    //..dodajemy Ellipse na ekran
-                                    canvas.shapes.add(e);
-                                    canvas.rePaint();
-                                }
-                            } catch (NumberFormatException ex) {
-                                JOptionPane.showMessageDialog(this, "Invalid number format!", "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                        break;
-
-                    case "Circle":
-                        String radiusInput = (String) JOptionPane.showInputDialog(
-                                this,
-                                "Enter radius:",
-                                "Input",
-                                JOptionPane.QUESTION_MESSAGE, //..question icon
-                                null,
-                                null,
-                                "80"
-                        );
-                        if (radiusInput != null) {
-                            try {
-                                double radius = Double.parseDouble(radiusInput);
-
-                                //..czy promień jest dodatni?
-                                if (radius <= 0) {
-                                    JOptionPane.showMessageDialog(this, "Radius must be > 0", "Error", JOptionPane.ERROR_MESSAGE);
-                                } else {
-                                    //..tworzymy nowy Circle
-                                    Circle c = new Circle(this.color, this.point, radius);
-
-                                    //..dodajemy Circle na ekran
-                                    canvas.shapes.add(c);
-                                    canvas.rePaint();
-                                }
-                            } catch (NumberFormatException ex) {
-                                JOptionPane.showMessageDialog(this, "Invalid number format!", "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                        break;
-                }
-            }
-
+    private void actionAdd() {
+        if (color == null || point == null) {
+            JOptionPane.showMessageDialog(this, "Select point and color!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
+        String[] shapes = {"Rectangle", "Square", "Ellipse", "Circle"};
+        //..tworzymy JComboBox, który obsłuży stringi - lista rozwijana
+        JComboBox<String> shapeList = new JComboBox<>(shapes);
+
+        //..definicja własnych przycisków
+        Object[] options = {"Draw", "Cancel"};
+
+        int result = JOptionPane.showOptionDialog(this, shapeList, "Please select shape",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE,
+                null,
+                options,
+                options[0]); //..domyślny przycisk
+
+        if (result == 0) {
+            String choice = (String) shapeList.getSelectedItem();
+            //..obiekt z pustymi wymiarami
+            Shape s = switch (choice) {
+                case "Rectangle" -> new Rectangle(color, point, 0, 0);
+                case "Square" -> new Square(color, point, 0);
+                case "Ellipse" -> new Ellipse(color, point, 0, 0);
+                case "Circle" -> new Circle(color, point, 0);
+                default -> null;
+            };
+
+            if (s != null) {
+                try {
+                    //..korzystamy z metod w klasach
+                    s.getExtraData(this);
+
+                    //..dodajemy do listy
+                    canvas.shapes.add(s);
+                    canvas.rePaint();
+                } catch (Exception ex) {
+                    //..sytuacja gdy użytkownik kliknie cancel / poda błędne liczby
+                    JOptionPane.showMessageDialog(this, "Cancelled or wrong data", "Info", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        }
     }
     //---------------------------------------------CLEAR----------------------------------------------
     private void actionClear(){
@@ -348,8 +228,7 @@ public class MainWindow extends JFrame {
 
         JFileChooser fileChooser = new JFileChooser();
         //..filtrowanie, żeby widziało pliki tylko z .dat
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "DAT files", "dat");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("DAT files", "dat");
         fileChooser.setFileFilter(filter);
 
         //..tytuł okienka
@@ -411,12 +290,11 @@ public class MainWindow extends JFrame {
         if (userSelection == JFileChooser.APPROVE_OPTION) {
             String filePath = fileChooser.getSelectedFile().getAbsolutePath();
             try {
-                // Przekazujemy rozmiar canvasu, żeby ustawić nagłówek SVG
+                //.. przekazujemy rozmiar canvas, żeby ustawić nagłówek SVG
                 FileManager.exportToSVG(canvas.shapes, filePath, canvasPanel.getWidth(), canvasPanel.getHeight());
                 JOptionPane.showMessageDialog(this, "Exported to SVG successfully!");
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, "Error exporting: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
             }
         }
     }

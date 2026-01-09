@@ -45,14 +45,8 @@ public class FileManager {
             if (s instanceof Ellipse) {
                 Ellipse e = (Ellipse) s;
                 double rx, ry;
-                if (s instanceof Circle) {
-                    //..dzielimy przez 2 - u nas ax1
-                    rx = e.ax1/2.0;
-                    ry = e.ax1/2.0;
-                } else {
-                    rx = e.ax1/2.0;
-                    ry = e.ax2/2.0;
-                }
+                    rx = e.ax1;
+                    ry = e.ax2;
                 svg.append(String.format(
                         "<ellipse cx=\"%d\" cy=\"%d\" rx=\"%.2f\" ry=\"%.2f\" fill=\"%s\" fill-opacity=\"%.2f\" />\n",
                         (int)s.center.x, (int)s.center.y, rx, ry, colorHex, opacity
